@@ -9,7 +9,15 @@ import {
   Input,
   Card,
   CardBody,
-  CardTitle
+  CardTitle,
+  Nav,
+  Navbar,
+  NavbarBrand,
+  NavItem,
+  NavLink,
+  Row, 
+  NavbarToggler,
+  Collapse
 } from "reactstrap";
 import "./App.css";
 import firebase from './Firebase';
@@ -17,23 +25,33 @@ import firebase from './Firebase';
 class Login extends Component {
   constructor(props) {
     super(props);
+    this.login = this.login.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.signUp = this.signUp.bind(this);
     this.state = {
       email: "",
       password: ""
-    };
   }
-
-  handleChange = e => {
+  }
+  handleChange(e) {
     this.setState({
       [e.target.id]: e.target.value
     });
   }
 
-  login = (e) => {
+  signUp(e) {
+    firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password).then((u)=>{
+    }).then((u)=>{console.log(u)})
+    .catch((error) => {
+        // console.log(error);
+      })
+  }
+
+  login(e) {
     
     firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password).then((u)=>{
     }).catch((error) => {
-        console.log(error);
+        // console.log(error);
       });
       
   }
@@ -75,10 +93,32 @@ sendPasswordReset = () => {
   render() {
     return (
       <Container>
+        <Navbar color="dark" expand="md">
+          <NavbarBrand href="/">Csevegő</NavbarBrand>
+          <NavbarToggler onClick={this.toggle} />
+          <Collapse isOpen={this.state.isOpen} navbar>
+            <Nav className="col-12 d-flex justify-content-center" navbar>
+              <NavItem>
+                <NavLink href="/components/">Főoldal</NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink href="/components/">Letöltések</NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink href="/components/">GDPR</NavLink>
+              </NavItem>
+            </Nav>
+          </Collapse>
+        </Navbar>
+        <br />
+        <Row >
+            <Col className="text-center text-md-center"><h2>Csevegőprogram</h2></Col>
+        </Row>
+        <br />
         <Card>
           <CardBody>
             <CardTitle>
-              <h2>Bejelentkezés</h2>
+              <h2>Regisztráció / Bejelentkezés</h2>
             </CardTitle>
             <Form className="form">
               <Col>
@@ -107,8 +147,9 @@ sendPasswordReset = () => {
                   />
                 </FormGroup>
               </Col>
-              <Button type="submit" onClick={this.login()}>Bejelentkezés</Button>
-              <Button onClick={this.sendEmailVerification}>E-mail ellenőrzés</Button>
+              <Button type="submit" onClick={this.signUp}>Regisztrálok</Button>
+              <Button type="submit" onClick={this.login}>Bejelentkezés</Button>
+              {/* <Button onClick={this.sendEmailVerification}>E-mail ellenőrzés</Button> */}
             </Form>
           </CardBody>
         </Card>

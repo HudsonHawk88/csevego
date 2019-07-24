@@ -17,6 +17,7 @@ class Home extends Component {
 
   logout = () => {
     firebase.auth().signOut();
+    
   }
 
   renderUzenetek = () => {};
