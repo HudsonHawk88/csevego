@@ -10,12 +10,20 @@ import {BrowserRouter as Router, Link, Route, Redirect} from 'react-router-dom';
 
 
 class App extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
+    this.toggle = this.toggle.bind(this);
     this.state = ({
       user: null,
+      isOpen: false
     });
     this.authListener = this.authListener.bind(this);
+  }
+
+  toggle() {
+    this.setState({
+      isOpen: !this.state.isOpen
+    });
   }
 
   componentDidMount() {
