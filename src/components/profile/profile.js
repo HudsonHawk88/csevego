@@ -1,11 +1,5 @@
-import React, { Component } from "react";
-import {
-  Container,
-  Col,
-  Card,
-  CardBody,
-  CardTitle
-} from "reactstrap";
+import React, { Component, Fragment } from "react";
+import { Container, Col, Card, CardBody, CardTitle } from "reactstrap";
 import "../../App.css";
 import firebase from "../../Firebase";
 
@@ -19,21 +13,28 @@ class Profile extends Component {
       progress: 0,
       isUploading: false
     };
- 
   }
   showUser = () => {
-    
     let user = firebase.auth().currentUser;
     let username, email, photoUrl;
-    
+
     if (user != null) {
       username = user.displayName;
       email = user.email;
       photoUrl = user.photoURL;
-      
-}
-return(username + email + photoUrl);
-  }
+    }
+    return (
+      <Fragment>
+        <Card>
+          <CardTitle><h4>Felhasználónév: </h4><b>{username}</b></CardTitle>
+          <CardBody>
+          {email}<br />
+          <img src={photoUrl} alt="avatar" />
+          </CardBody>
+        </Card>
+      </Fragment>
+    )
+  };
 
   render() {
     return (

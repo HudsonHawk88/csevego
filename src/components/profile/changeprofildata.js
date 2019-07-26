@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import {
   Container,
   Button,
@@ -13,10 +13,10 @@ import {
 import "../../App.css";
 import firebase from "../../Firebase";
 import FileUploader from "react-firebase-file-uploader";
-import Profile from './profile';
+import Profile from "./profile";
 
 class ChangeUserData extends Component {
-constructor(props) {
+  constructor(props) {
     super(props);
     this.state = {
       username: "",
@@ -45,40 +45,58 @@ constructor(props) {
 
   handleUploadSuccess = filename => {
     this.setState({ avatar: filename, progress: 100, isUploading: false });
-
+    let username = firebase.auth().currentUser.displayName;
+    if (firebase.auth().currentUser.displayName === null){
     firebase
       .storage()
       .ref("profilPictures")
-      .child(this.state.username)
+      .child(username)
       .child(filename)
       .getDownloadURL()
       .then(URL => {
         this.setState({ avatarURL: URL });
-        console.log(this.state.avatarURL);
-        let user = {
-          username: this.state.username,
-          avatarURL: this.state.avatarURL
-        };
+      })
+    }
+    else {
         firebase
-          .database()
-          .ref("users")
-          .child(this.state.username)
-          .push(user);
-      });
+      .storage()
+      .ref("profilPictures")
+      .child(username)
+      .child(filename)
+      .getDownloadURL()
+      .then(URL => {
+        this.setState({ avatarURL: URL });
+      })
+    }
   }
 
   onFeltolt = () => {
+    if (firebase.auth().currentUser.displayName === null){
     firebase.auth().currentUser.updateProfile({
-        displayName: this.state.username,
-        photoURL: JSON.stringify(this.state.avatarURL)
-      });
-      console.log(firebase.auth().currentUser.displayName)
-      console.log(firebase.auth().currentUser.photoURL)
-      return(<Profile />)
+      displayName: this.state.username,
+      photoURL: this.state.avatarURL
+    });
+    console.log("displayName = username = nincs")
+    return <Profile />;
+}
+else {
+    firebase.auth().currentUser.updateProfile({
+    username: firebase.auth().currentUser.displayName,
+    photoURL: this.state.avatarURL
+    });
+    console.log("displayName = username = volt")
+    return <Profile />;
+}
   }
-render(){
-return(
-<Container id="container">
+    showData = () => {
+        let currentUser = firebase.auth().currentUser;
+        let username, photoUrl;
+        console.log(currentUser)
+        if (currentUser != null) {
+        username = currentUser.displayName;
+        photoUrl = currentUser.photoURL;
+        }
+        return (<Container id="container">
         <Card>
           <CardBody>
             <CardTitle>
@@ -86,7 +104,13 @@ return(
                 <h2>Profilom</h2>
               </Col>
             </CardTitle>
-            <Col>
+            {username ? (
+                (
+                    <Col>
+                    </Col>
+                    )
+            ) : (
+                <Col>
               <FormGroup>
                 <Label for="username">Felhasználónév</Label>
                 <Input
@@ -99,6 +123,7 @@ return(
                 />
               </FormGroup>
             </Col>
+            ) }
             <Col>
               <FormGroup>
                 <label>Avatar / Profilkép:</label>
@@ -109,31 +134,54 @@ return(
                 {this.state.avatarURL && (
                   <img src={this.state.avatarURL} alt="avatar" />
                 )}
-                <FileUploader
-                  accept="image/*"
-                  name="avatar"
-                  storageRef={firebase
-                    .storage()
-                    .ref("profilPictures")
-                    .child(this.state.username)}
-                  onUploadStart={this.handleUploadStart}
-                  onUploadError={this.handleUploadError}
-                  onUploadSuccess={this.handleUploadSuccess}
-                  onProgress={this.handleProgress}
-                />
+                {username ? (
+                    <FileUploader
+                    accept="image/*"
+                    name="avatar"
+                    storageRef={firebase
+                      .storage()
+                      .ref("profilPictures")
+                      .child(username)
+                    }
+                    onUploadStart={this.handleUploadStart}
+                    onUploadError={this.handleUploadError}
+                    onUploadSuccess={this.handleUploadSuccess}
+                    onProgress={this.handleProgress}
+                  />
+                ) : (
+                    <FileUploader
+                    accept="image/*"
+                    name="avatar"
+                    storageRef={firebase
+                      .storage()
+                      .ref("profilPictures")
+                      .child(this.state.username)
+                    }
+                    onUploadStart={this.handleUploadStart}
+                    onUploadError={this.handleUploadError}
+                    onUploadSuccess={this.handleUploadSuccess}
+                    onProgress={this.handleProgress}
+                  />
+                )}
+                
               </FormGroup>
             </Col>
-            <Button
-              type="submit"
-              color="primary"
-              onClick={this.onFeltolt}
-            >
+            <Button type="submit" color="primary" onClick={this.onFeltolt}>
               Elküld
             </Button>
           </CardBody>
         </Card>
-        </Container>
-)
-}
+      </Container>)
+      
+  }
+ 
+
+  render() {
+      
+    return (
+      <Fragment>{this.showData()}</Fragment>
+    )
+  }
+  
 }
 export default ChangeUserData;

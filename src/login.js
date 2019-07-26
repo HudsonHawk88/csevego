@@ -63,7 +63,7 @@ class Login extends Component {
       .signInWithEmailAndPassword(this.state.email, this.state.password)
       .catch(error => {
         let errorCode = error.code;
-        console.log(errorCode);
+        console.log(errorCode)
         if (errorCode === "auth/user-not-found") {
           alert(
             "Nincs ilyen felhasználó vagy a fiókodat törölték! Kérlek ellenőrizd a bevitt adatokat vagy regisztrálj!"
@@ -75,38 +75,32 @@ class Login extends Component {
         if (errorCode === "auth/wrong-password") {
           alert("Nem jó jelszó! Kérlek ellenőrizd a beírt jelszavadat!");
         }
+        if (errorCode === "auth/email-not-verified") {
+          alert("Email címed nincs ellenőrizve! Kérjük a belépéshez kattintson az ellenőrző email-ben lévő akiváló linkre!");
+          this.login();
+        }
       });
+      
   }
   sendEmailVerification = () => {
-    // [START sendemailverification]
     firebase
       .auth()
       .currentUser.sendEmailVerification()
       .then(function() {
-        // Email Verification sent!
-        // [START_EXCLUDE]
         alert("E-mail ellenőrzés elküldve!");
-        // [END_EXCLUDE]
       });
-    // [END sendemailverification]
   };
 
   sendPasswordReset = () => {
     var email = this.state.email;
-    // [START sendpasswordemail]
     firebase
       .auth()
       .sendPasswordResetEmail(email)
       .then(function() {
-        // Password Reset Email Sent!
-        // [START_EXCLUDE]
         alert("Jelszó visszaállítás elküldve!");
-        // [END_EXCLUDE]
       })
       .catch(function(error) {
-        // Handle Errors here.
         var errorCode = error.code;
-        // [START_EXCLUDE]
         if (errorCode === "auth/invalid-email") {
           alert(
             "Nincs megadva E-mail cím! Kérelek írd be az E-mail címed, amivel regisztráltál!"
@@ -117,10 +111,7 @@ class Login extends Component {
             "Nincs ilyen felhasználó vagy fiókodat törölték! Kérlek ellenőrizd a megadott adatokat vagy regisztrálj!"
           );
         }
-        console.log(errorCode);
-        // [END_EXCLUDE]
       });
-    // [END sendpasswordemail];
   };
   render() {
     return (
