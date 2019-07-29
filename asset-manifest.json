@@ -1,0 +1,18 @@
+{
+  "files": {
+    "main.css": "/csevego/static/css/main.ba49ec77.chunk.css",
+    "main.js": "/csevego/static/js/main.15ac3522.chunk.js",
+    "main.js.map": "/csevego/static/js/main.15ac3522.chunk.js.map",
+    "runtime~main.js": "/csevego/static/js/runtime~main.61de31b4.js",
+    "runtime~main.js.map": "/csevego/static/js/runtime~main.61de31b4.js.map",
+    "static/css/2.22a7d4ef.chunk.css": "/csevego/static/css/2.22a7d4ef.chunk.css",
+    "static/js/2.44beda70.chunk.js": "/csevego/static/js/2.44beda70.chunk.js",
+    "static/js/2.44beda70.chunk.js.map": "/csevego/static/js/2.44beda70.chunk.js.map",
+    "index.html": "/csevego/index.html",
+    "precache-manifest.c9ca3700be82a85269bc14d98ea49a71.js": "/csevego/precache-manifest.c9ca3700be82a85269bc14d98ea49a71.js",
+    "service-worker.js": "/csevego/service-worker.js",
+    "static/css/2.22a7d4ef.chunk.css.map": "/csevego/static/css/2.22a7d4ef.chunk.css.map",
+    "static/css/main.ba49ec77.chunk.css.map": "/csevego/static/css/main.ba49ec77.chunk.css.map",
+    "static/media/favicon.ico": "/csevego/static/media/favicon.c92b85a5.ico"
+  }
+}
